@@ -2,15 +2,14 @@ const express =require( 'express');
 const path = require('path');
 const  bodyParser= require ('body-parser');
 const mongoose = require ('mongoose');
-const Cliente = require( "./classes/Cliente.cjs");
-const Imprenditore = require('./classes/Imprenditore.cjs');
-const Venditore = require( "./classes/Venditore.cjs");
 const {hashPassword,comparePassword,compareDBbusiness,compareDBbusinessv2,compareDB, compareDBadmin}= require ("./passwordmanager.cjs");
-require('dotenv').config({ path: 'process.env' });
+require('dotenv').config({path: path.resolve(__dirname, 'process.env')});
 const {LocalStorage} = require('node-localstorage');
-const authcheck = require('./API/authchecks.cjs');
+//const authcheck = require('./API/authchecks.cjs');
 
 const dbUrl = process.env.DB_URL;
+const port = process.env.PORT || 3000;
+const app = express();
 
 
 

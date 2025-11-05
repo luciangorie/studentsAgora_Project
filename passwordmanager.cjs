@@ -1,11 +1,5 @@
 const bcrypt = require('bcrypt');
-const Cliente = require('./classes/Cliente.cjs');
-const  Imprenditore  = require('./classes/Imprenditore.cjs');
-const Venditore = require('./classes/Venditore.cjs');
-const DBClient = require('./models/clientModel.cjs');
-const DBVendor=require('./models/vendorModel.cjs');
-const DBEntrepreneur=require('./models/promoterModel.cjs');
-const DBAdmin=require('./models/adminModel.cjs');
+
 
 
 
