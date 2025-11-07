@@ -2,29 +2,107 @@ const express =require( 'express');
 const path = require('path');
 const  bodyParser= require ('body-parser');
 const mongoose = require ('mongoose');
-const {hashPassword,comparePassword,compareDBbusiness,compareDBbusinessv2,compareDB, compareDBadmin}= require ("./passwordmanager.cjs");
+const {hashPassword,comparePassword,compareDBAdmin}= require ("./passwordmanager.cjs");
+const {tokenChecker,TokenGen,TokenGenEnt,TokenGenVend,TokenGenAdmin,st}= require ("./tokenchecker.cjs");
+const jwt = require('jsonwebtoken');
 require('dotenv').config({path: path.resolve(__dirname, 'process.env')});
 const {LocalStorage} = require('node-localstorage');
-//const authcheck = require('./API/authchecks.cjs');
+
+const accounts = require('./API/accounts.cjs');
+
+
+
 
 const dbUrl = process.env.DB_URL;
 const port = process.env.PORT || 3000;
 const app = express();
 
+// Middleware per il parsing del body
+app.use(express.urlencoded({ extended: true })); // Per form HTML
+app.use(express.json());
+
+// Servi i file statici dalla cartella `public`
+app.use(express.static(path.join(__dirname, 'public')));
+
+app.use('/api/v1/accounts', accounts);
+
+
+app.get('/', (req, res) => {
+    
+    res.status(200).sendFile(path.join(__dirname, 'public', `/login.html`));
+});
+
+//login stuff
+app.post('/login', async (req, res) => {
+    const { usermail, password } = req.body;
+    var usermail1 = usermail.toLowerCase();
+    var au = await compareDBAdmin(usermail1, password);
+    if (au) {
+    const token = TokenGen(usermail1);
+    res.send(`
+        <html>
+        <head><title>Login</title></head>
+        <body>
+            <script>
+                localStorage.setItem('token', '${token}');
+                window.location.href = '/caricamento.html';
+            </script>
+        </body>
+        </html>
+    `);
+}
+    else {
+        res.status(401).send(`<h1 style="color: #008000;">Accesso non effettuato!</h1>`);
+    }
+});
+
+app.post('/registrazione', async (req, res) => {
+   
+});
+
+
+app.post('/loginadmin', async (req, res) => {
+    const { usermail, password } = req.body;
+    var usermail1 = usermail.toLowerCase();
+    var au= await compareDBAdmin(usermail1, password);
+    if (au) {
+        const token = TokenGenAdmin(usermail1);
+        st(token);
+        res.send(`
+        <html>
+        <head><title>Login</title></head>
+        <body>
+            <script>
+                localStorage.setItem('token', '${token}');
+                window.location.href = '/caricamento-business.html';
+            </script>
+        </body>
+        </html>
+    `);
+    } else res.status(401).send(`<h1 style="color: #008000;">Accesso non effettuato!</h1>`)
+});
+
+
+
+app.get('/homev1', (req, res) => {
+    res.status(200).sendFile(path.join(__dirname, 'public', `/business.html`));
+});
 
 
 
 
-mongoose.connect(dbUrl).then( ()=> {
-    console.log("Connected!")
-})
-.catch(err => {
-    console.log("Errore di connessione " ,err)
-}).then(()=> {
+mongoose.connect(dbUrl, {
+    
+    serverSelectionTimeoutMS: 5000
+}).then(() => {
+    console.log("Connesso con successo al database MongoDB!");
+    
+}).catch((error) => {
+    console.error("Errore di connessione al database MongoDB:", error);
+});
 
 
 // Avvio del server
 app.listen(port, () => {
     console.log(`Server in ascolto su http://localhost:${port}`);
-});
 });
