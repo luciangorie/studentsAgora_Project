@@ -7,8 +7,10 @@ const {tokenChecker,TokenGen,TokenGenEnt,TokenGenVend,TokenGenAdmin,st}= require
 const jwt = require('jsonwebtoken');
 require('dotenv').config({path: path.resolve(__dirname, 'process.env')});
 const {LocalStorage} = require('node-localstorage');
+const PersonalDetailsService = require('./services/detailsService.cjs');
 
 const accounts = require('./API/accounts.cjs');
+const students = require('./API/student.cjs');
 
 
 
@@ -25,6 +27,7 @@ app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/api/v1/accounts', accounts);
+app.use('/api/v1/students', students);
 
 
 app.get('/', (req, res) => {
@@ -65,6 +68,8 @@ app.post('/loginadmin', async (req, res) => {
     const { usermail, password } = req.body;
     var usermail1 = usermail.toLowerCase();
     var au= await compareDBAdmin(usermail1, password);
+
+    const newDetails = await PersonalDetailsService.savenewPersonalDetails("sdc","Ciao, sono un nuovo utente!", ["E1","E"], ["FU"]);
     if (au) {
         const token = TokenGenAdmin(usermail1);
         st(token);

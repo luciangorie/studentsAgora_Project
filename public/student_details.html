@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Student Profile</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        :root {
+            --main: #0f172a;
+            --secondary: #1e293b;
+            --accent: #f4b400;
+            --text: #f8fafc;
+            --muted: #cbd5e1;
+            --border: #334155;
+        }
+        body {
+            background: var(--main);
+            color: var(--text);
+            font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 40px 16px;
+        }
+        .profile-card {
+            background: var(--secondary);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+            max-width: 850px;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            animation: fadeIn 0.6s ease-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Header section: image + main info */
+        .profile-header {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            padding: 28px;
+            gap: 24px;
+            border-bottom: 1px solid var(--border);
+        }
+        .profile-pic {
+            flex-shrink: 0;
+            width: 140px;
+            height: 140px;
+            border-radius: 50%;
+            border: 3px solid var(--accent);
+            overflow: hidden;
+            background: #222;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .profile-pic img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .info-block {
+            flex: 1;
+            min-width: 250px;
+        }
+        .username {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--accent);
+            margin-bottom: 4px;
+        }
+        .name-line {
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+        .university {
+            font-size: 1rem;
+            color: var(--muted);
+            margin-top: 4px;
+        }
+        .details-line {
+            margin-top: 8px;
+            font-size: 0.95rem;
+            color: var(--muted);
+        }
+
+        /* Body section */
+        .profile-body {
+            padding: 24px 28px;
+        }
+        .section {
+            margin-bottom: 22px;
+        }
+        .section h2 {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--accent);
+            margin-bottom: 8px;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 4px;
+        }
+        .biography {
+            line-height: 1.6;
+            font-size: 1rem;
+            color: var(--text);
+            white-space: pre-line;
+        }
+        ul.list {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+        ul.list li {
+            padding: 6px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            font-size: 1rem;
+        }
+        ul.list li:last-child {
+            border-bottom: none;
+        }
+        .empty {
+            color: var(--muted);
+            font-style: italic;
+        }
+
+        @media (max-width: 600px) {
+            .profile-header {
+                flex-direction: column;
+                text-align: center;
+            }
+            .info-block {
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="profile-card">
+        <div class="profile-header">
+            <div class="profile-pic" id="profilePic">No picture</div>
+            <div class="info-block">
+                <div class="username" id="username">Username</div>
+                <div class="name-line">
+                    <span id="name">-</span> <span id="surname">-</span>
+                </div>
+                <div class="university">
+                    <span id="university">-</span> 📍
+                </div>
+                <div class="details-line">
+                    Birthday: <span id="birthday">-</span> 🎂
+                </div>
+            </div>
+        </div>
+
+        <div class="profile-body">
+            <div class="section">
+                <h2>Biography</h2>
+                <div class="biography" id="biography">No biography available.</div>
+            </div>
+
+            <div class="section">
+                <h2>Member of</h2>
+                <ul class="list" id="memberofList">
+                    <li class="empty">None</li>
+                </ul>
+            </div>
+
+            <div class="section">
+                <h2>Events Participated</h2>
+                <ul class="list" id="eventsList">
+                    <li class="empty">None</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const username = "sdc";
+
+        // Fetch main student info
+        async function fetchStudentDetails() {
+            try {
+                const response = await fetch(`/api/v1/students/getfrom/${username}`);
+                const result = await response.json();
+                if (result.success && result.data) {
+                    const data = result.data;
+                    document.getElementById('username').textContent = data.username;
+                    document.getElementById('name').textContent = data.firstName;
+                    document.getElementById('surname').textContent = data.lastName;
+                    document.getElementById('university').textContent = data.university || '-';
+
+                    if (data.birthdate) {
+                        const date = new Date(data.birthdate);
+                        const day = date.getDate().toString().padStart(2, '0');
+                        const month = (date.getMonth() + 1).toString().padStart(2, '0');
+                        document.getElementById('birthday').textContent = `${day}/${month}`;
+                    }
+
+                    const picContainer = document.getElementById('profilePic');
+                    picContainer.innerHTML = '';
+                    if (data.profiledPicture) {
+                        const img = document.createElement('img');
+                        img.src = data.profiledPicture;
+                        img.alt = "Profile picture";
+                        picContainer.appendChild(img);
+                    } else {
+                        picContainer.textContent = "No picture";
+                    }
+                } else {
+                    document.getElementById('username').textContent = "Student not found";
+                }
+            } catch {
+                document.getElementById('username').textContent = "Error loading student";
+            }
+        }
+
+        // Fetch extended personal details
+        async function fetchPersonalDetails() {
+            try {
+                const response = await fetch(`/api/v1/students/details/${username}`);
+                const result = await response.json();
+                if (result.success && result.data) {
+                    const data = result.data;
+                    document.getElementById('biography').textContent = data.biography || "No biography available.";
+
+                    const memberList = document.getElementById('memberofList');
+                    memberList.innerHTML = '';
+                    if (data.memberof?.length) {
+                        data.memberof.forEach(m => {
+                            const li = document.createElement('li');
+                            li.textContent = m;
+                            memberList.appendChild(li);
+                        });
+                    } else {
+                        memberList.innerHTML = '<li class="empty">None</li>';
+                    }
+
+                    const eventsList = document.getElementById('eventsList');
+                    eventsList.innerHTML = '';
+                    if (data.eventsParticipated?.length) {
+                        data.eventsParticipated.forEach(e => {
+                            const li = document.createElement('li');
+                            li.textContent = e;
+                            eventsList.appendChild(li);
+                        });
+                    } else {
+                        eventsList.innerHTML = '<li class="empty">None</li>';
+                    }
+                }
+            } catch (error) {
+                console.error("Error loading personal details:", error);
+            }
+        }
+
+        fetchStudentDetails();
+        fetchPersonalDetails();
+    </script>
+</body>
+</html>

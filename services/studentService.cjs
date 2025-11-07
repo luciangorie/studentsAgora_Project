@@ -19,5 +19,16 @@ async function newregistration(student) {
     }
 }
 
-module.exports = { newregistration };
+async function getByUsername(username) {
+    try {
+        const student = await DBStudent.findOne({ username:
+    username });
+        return student;
+    } catch (error) {
+        console.error(`Errore durante il recupero dello studente: ${error}`);
+        throw error;
+    }
+}
+
+module.exports = { newregistration, getByUsername };
     

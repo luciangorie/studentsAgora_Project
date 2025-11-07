@@ -27,6 +27,48 @@
     </style>
 </head>
 <body>
-    <div class="success-message">Successfull</div>
+    <div class="success-message">Registration completed successfully!</div>
+    <button class="back-btn" onclick="window.location.href='login.html'">Back to login</button>
 </body>
 </html>
+    <style>
+        body {
+            background: linear-gradient(120deg, #1a237e 60%, #fbc02d 100%);
+            color: #fff;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+        }
+        .success-message {
+            color: #43a047;
+            font-size: 2rem;
+            font-weight: bold;
+            background: #fff;
+            border-radius: 8px;
+            padding: 30px 50px;
+            box-shadow: 0 2px 8px rgba(20,33,61,0.12);
+            margin-top: 20px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        .back-btn {
+            background: linear-gradient(90deg, #fbc02d 60%, #1a237e 100%);
+            color: #14213d;
+            border: none;
+            border-radius: 6px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            padding: 12px 32px;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(20,33,61,0.12);
+            margin: 0 auto;
+            display: block;
+        }
+        .back-btn:hover {
+            background: linear-gradient(90deg, #1a237e 60%, #fbc02d 100%);
+            color: #fbc02d;
+        }
+    </style>
