@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en"></html>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Student Representative Registration - Student's Agora</title>
+    <title>Student Registration - Student's Agora</title>
     <style>
         :root {
             --main: #14213d;
@@ -178,9 +178,9 @@
             <span id="notificationMessage"></span>
             <button class="close-btn" id="notificationClose" aria-label="Close">&times;</button>
         </div>
-        <h1>Student Representative</h1>
-        <p class="description">Register as a university representative on <span style="color:var(--accent);font-weight:700;">Student's Agora</span></p>
-        <form id="adminRegistrationForm" autocomplete="off">
+        <h1>Student Registration</h1>
+        <p class="description">Register as a student on <span style="color:var(--accent);font-weight:700;">Student's Agora</span></p>
+        <form id="studentRegistrationForm" autocomplete="off">
             <div class="form-group">
                 <label for="firstName">First Name</label>
                 <input type="text" id="firstName" name="firstName" required>
@@ -217,10 +217,6 @@
                 </select>
             </div>
             <div class="form-group">
-                <label for="begin">Start Date of Mandate</label>
-                <input type="date" id="begin" name="begin" required>
-            </div>
-            <div class="form-group">
                 <label for="username">Username</label>
                 <input type="text" id="username" name="username" required>
             </div>
@@ -232,7 +228,11 @@
                 <label for="confirm_password">Confirm Password</label>
                 <input type="password" id="confirm_password" name="confirm_password" required minlength="8">
             </div>
-            <button type="submit" class="register-btn">Register as Student Representative</button>
+            <div class="form-group">
+                <label for="profiledPicture">Profile Picture URL</label>
+                <input type="text" id="profiledPicture" name="profiledPicture" placeholder="Paste image URL here" required>
+            </div>
+            <button type="submit" class="register-btn">Register as Student</button>
         </form>
         <button class="login-btn" onclick="window.location.href='login.html'">Already have an account? Login</button>
     </div>
@@ -273,7 +273,7 @@
 
         // Registration form logic
         document.addEventListener('DOMContentLoaded', function() {
-            const form = document.getElementById('adminRegistrationForm');
+            const form = document.getElementById('studentRegistrationForm');
             if (!form) return;
             form.addEventListener('submit', async function(e) {
                 e.preventDefault();
@@ -291,14 +291,14 @@
                     const email = document.getElementById('email').value.trim();
                     const username = document.getElementById('username').value.trim();
                     const birthdate = document.getElementById('birthdate').value;
-                    const university = document.getElementById('university').value; // selected string
-                    const begin = document.getElementById('begin').value;
+                    const university = document.getElementById('university').value;
+                    const profiledPicture = document.getElementById('profiledPicture').value.trim();
 
-                    const response = await fetch('/api/v1/accounts/admin-registrazione', {
+                    const response = await fetch('/api/v1/accounts/student-registrazione', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({
-                            firstName, lastName, email, username, password, birthdate, university, begin
+                            firstName, lastName, email, username, password, birthdate, university, profiledPicture
                         })
                     });
 
@@ -309,7 +309,7 @@
                         throw new Error(data.error || 'Registration error');
                     }
 
-                    window.location.href = '/success.html';
+                    window.location.href = '/success-student.html';
 
                 } catch (error) {
                     showNotification(error.message, 'error');

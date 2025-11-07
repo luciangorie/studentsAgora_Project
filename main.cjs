@@ -2,7 +2,7 @@ const express =require( 'express');
 const path = require('path');
 const  bodyParser= require ('body-parser');
 const mongoose = require ('mongoose');
-const {hashPassword,comparePassword,compareDBAdmin}= require ("./passwordmanager.cjs");
+const {hashPassword,comparePassword,compareDBAdmin,compareDBStudent}= require ("./passwordmanager.cjs");
 const {tokenChecker,TokenGen,TokenGenEnt,TokenGenVend,TokenGenAdmin,st}= require ("./tokenchecker.cjs");
 const jwt = require('jsonwebtoken');
 require('dotenv').config({path: path.resolve(__dirname, 'process.env')});
@@ -36,7 +36,7 @@ app.get('/', (req, res) => {
 app.post('/login', async (req, res) => {
     const { usermail, password } = req.body;
     var usermail1 = usermail.toLowerCase();
-    var au = await compareDBAdmin(usermail1, password);
+    var au = await compareDBStudent(usermail1, password);
     if (au) {
     const token = TokenGen(usermail1);
     res.send(`

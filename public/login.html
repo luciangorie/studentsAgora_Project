@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="it">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -165,10 +165,10 @@
             </svg>
         </span>
         <h1>Students Agora - Login</h1>
-        <p class="description">Accedi alla web app di ECIU University con i tuoi dati personali.</p>
+        <p class="description">Log in to the ECIU University web app with your personal credentials.</p>
         <form action="/login" method="POST">
             <div class="form-group">
-                <label for="usermail">Email universitaria</label>
+                <label for="usermail">University Email</label>
                 <input type="text" id="usermail" name="usermail" required>
             </div>
             <div class="form-group">
@@ -176,7 +176,7 @@
                 <input type="password" id="password" name="password" required>
             </div>
             <button type="submit" class="login-btn" name="userType" value="cliente">Login - Student</button>
-            <button type="button" class="register-btn" onclick="window.location.href='registrazione.html'">Register - Student</button>
+            <button type="button" class="register-btn" onclick="window.location.href='registration-student.html'">Register - Student</button>
             <button type="submit" class="login-btn" name="userType" value="admin" formaction="/loginadmin">Login - Student Ambassadors &amp; Council</button>
             <button type="button" class="register-btn" onclick="window.location.href='registrazione.html'">Register as Student Ambassador or Student Council</button>
         </form>

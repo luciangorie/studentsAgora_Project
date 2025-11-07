@@ -28,6 +28,18 @@ async function compareDBAdmin(usermail, password) {
   }
 }
 
+async function compareDBStudent(usermail, password) {
+  const StudentModel = require('./models/studentModel.cjs');
+  const user = await StudentModel.findOne({ email: usermail });
+  if (!user) {
+    return false;
+  }
+  else {
+    const isMatch = await comparePassword(password, user.password);
+    return isMatch;
+  }
+}
 
 
-  module.exports= {hashPassword,comparePassword,compareDBAdmin};
+
+  module.exports= {hashPassword,comparePassword,compareDBAdmin,compareDBStudent};

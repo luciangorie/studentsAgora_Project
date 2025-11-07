@@ -4,18 +4,41 @@
 <head>
     <title>Accesso effettuato</title>
     <style>
+        body {
+            background: linear-gradient(120deg, #1a237e 60%, #fbc02d 100%);
+            color: #fff;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+        }
         .progress-container {
-            width: 100%;
-            background-color: #ddd;
-            border-radius: 5px;
-            margin: 20px 0;
+            width: 80%;
+            max-width: 400px;
+            background-color: #263159;
+            border-radius: 8px;
+            margin: 30px 0;
+            box-shadow: 0 2px 8px rgba(20,33,61,0.12);
         }
         .progress-bar {
             height: 20px;
-            background-color: #4CAF50;
-            border-radius: 5px;
+            background: linear-gradient(90deg, #fbc02d 60%, #1a237e 100%);
+            border-radius: 8px;
             width: 0%;
-            transition: width 3s linear;
+            transition: width 1.5s linear;
+        }
+        h1 {
+            color: #fbc02d;
+            font-size: 2rem;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        p {
+            color: #fff;
+            font-size: 1.1rem;
+            text-align: center;
         }
     </style>
     <script>
@@ -27,13 +50,13 @@
             }
             document.getElementById('progress').style.width = '100%';
             setTimeout(function() {
-                window.location.href = '/homev2-client.html';
+                window.location.href = '/home.html';
             }, 1500);
         };
     </script>
 </head>
 <body>
-    <h1 id="welcome-message" style="color: #008000;">Accesso effettuato. Caricamento...</h1>
+    <h1 id="welcome-message">Accesso effettuato. Caricamento...</h1>
     <div class="progress-container">
         <div id="progress" class="progress-bar"></div>
     </div>
