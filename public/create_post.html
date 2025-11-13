@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Create Post</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        :root {
+            --main: #14213d;
+            --accent: #fca311;
+            --accent-dark: #c97c00;
+            --bg: #1a1f2b;
+            --text: #e5e5e5;
+        }
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'Segoe UI', Arial, sans-serif;
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .container {
+            background: rgba(20,33,61,0.97);
+            border-radius: 18px;
+            box-shadow: 0 8px 32px rgba(20,33,61,0.25);
+            border: 1.5px solid var(--accent);
+            padding: 32px 28px 24px 28px;
+            margin-top: 40px;
+            max-width: 400px;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        h1 {
+            color: var(--accent);
+            margin-bottom: 18px;
+        }
+        .form-group {
+            margin-bottom: 18px;
+            width: 100%;
+        }
+        label {
+            display: block;
+            margin-bottom: 7px;
+            font-weight: 600;
+            color: var(--accent);
+        }
+        input[type="text"], textarea {
+            width: 100%;
+            padding: 10px 14px;
+            border: 1.5px solid var(--accent-dark);
+            border-radius: 6px;
+            background: #22263a;
+            color: var(--text);
+            font-size: 1rem;
+            box-sizing: border-box;
+            margin-bottom: 6px;
+        }
+        textarea {
+            min-height: 70px;
+            resize: vertical;
+        }
+        .optional-btn {
+            background: var(--accent);
+            color: var(--main);
+            border: none;
+            border-radius: 6px;
+            padding: 7px 16px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            margin-bottom: 10px;
+            margin-top: 2px;
+        }
+        .optional-btn:active {
+            background: var(--accent-dark);
+        }
+        .submit-btn {
+            background: linear-gradient(90deg, var(--accent) 60%, var(--accent-dark) 100%);
+            color: var(--main);
+            border: none;
+            border-radius: 6px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            padding: 12px 32px;
+            cursor: pointer;
+            margin-top: 10px;
+            width: 100%;
+        }
+        .submit-btn:hover {
+            background: linear-gradient(90deg, var(--accent-dark) 60%, var(--accent) 100%);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Create a Post</h1>
+        <form id="postForm">
+            <div class="form-group">
+                <label for="picture">Photo Link</label>
+                <input type="text" id="picture" name="picture" placeholder="Paste image URL here">
+            </div>
+            <div class="form-group">
+                <label for="text">Description</label>
+                <textarea id="text" name="text" required placeholder="Write something..."></textarea>
+            </div>
+            <div class="form-group">
+                <label for="hashtags">Hashtags (comma separated)</label>
+                <input type="text" id="hashtags" name="hashtags" placeholder="#university, #event">
+            </div>
+            <div class="form-group" id="togetherwith-group" style="display:none;">
+                <label for="togetherwith">Together with (comma separated usernames)</label>
+                <input type="text" id="togetherwith" name="togetherwith" placeholder="user1, user2">
+            </div>
+            <button type="button" class="optional-btn" id="addTogetherBtn">Add "Together with"</button>
+            <button type="submit" class="submit-btn">Post</button>
+        </form>
+    <script>
+        // Funzione per decodificare il JWT (senza validazione firma)
+        function parseJwt (token) {
+            try {
+                return JSON.parse(atob(token.split('.')[1]));
+            } catch (e) {
+                return null;
+            }
+        }
+        async function getUsernameFromEmail(email) {
+            const response = await fetch('/api/v1/accounts/getidbyemail?email=' + encodeURIComponent(email));
+            const data = await response.json();
+            if (data.success) return data.id;
+            return null;
+        }
+        document.getElementById('addTogetherBtn').addEventListener('click', function() {
+            document.getElementById('togetherwith-group').style.display = 'block';
+            this.style.display = 'none';
+        });
+        document.getElementById('postForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const picture = document.getElementById('picture').value.trim();
+            const text = document.getElementById('text').value.trim();
+            const hashtags = document.getElementById('hashtags').value.trim();
+            let togetherwith = [];
+            if (document.getElementById('togetherwith-group').style.display !== 'none') {
+                togetherwith = document.getElementById('togetherwith').value.split(',').map(s => s.trim()).filter(Boolean);
+            }
+            let author = 'unknown';
+            const token = localStorage.getItem('token');
+            if (token) {
+                const decoded = parseJwt(token);
+                if (decoded && decoded.email) {
+                    const username = await getUsernameFromEmail(decoded.email);
+                    if (username) author = username;
+                }
+            }
+            const postData = {
+                picture,
+                text,
+                hashtags: hashtags ? hashtags.split(',').map(s => s.trim()).filter(Boolean) : [],
+                togetherwith,
+                date: new Date().toISOString(),
+                author
+            };
+            try {
+                const response = await fetch('/api/v1/posts/create', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(postData)
+                });
+                const result = await response.json();
+                if (result.success) {
+                    alert('Post created successfully!');
+                    window.location.href = 'home.html';
+                } else {
+                    alert('Error: ' + result.error);
+                }
+            } catch (err) {
+                alert('Error: ' + err);
+            }
+        });
+    </script>
+</body>
+</html>

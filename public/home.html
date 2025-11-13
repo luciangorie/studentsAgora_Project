@@ -71,10 +71,149 @@
     <div class="top-bar">
     <button class="bar-btn yellow" onclick="window.location.href='student_details.html'">Test Area</button>
         <button class="bar-btn purple">Ambassadors and Council news</button>
-        <button class="bar-btn plus" title="Add"><span>+</span></button>
+    <button class="bar-btn plus" title="Add" onclick="window.location.href='create_post.html'"><span>+</span></button>
     </div>
-    <div class="feed">
-        <!-- Feed area, empty for now -->
+    <div class="feed" id="feed">
+        <!-- Feed area, posts will be loaded here -->
     </div>
+    <script>
+    async function loadPosts() {
+        try {
+            const response = await fetch('/api/v1/posts/allposts');
+            const result = await response.json();
+            if (result.success && Array.isArray(result.data)) {
+                const feed = document.getElementById('feed');
+                feed.innerHTML = '';
+                result.data.forEach(post => {
+                    const card = document.createElement('div');
+                    card.style.background = '#fff';
+                    card.style.color = '#14213d';
+                    card.style.borderRadius = '14px';
+                    card.style.boxShadow = '0 2px 12px rgba(20,33,61,0.10)';
+                    card.style.marginBottom = '28px';
+                    card.style.padding = '18px';
+                    card.style.display = 'flex';
+                    card.style.flexDirection = 'column';
+                    card.style.alignItems = 'center';
+                    card.style.maxWidth = '420px';
+                    card.style.marginLeft = 'auto';
+                    card.style.marginRight = 'auto';
+
+                    // Username e data SOPRA il post
+                    const meta = document.createElement('div');
+                    meta.style.display = 'flex';
+                    meta.style.alignItems = 'center';
+                    meta.style.justifyContent = 'center';
+                    meta.style.gap = '8px';
+                    meta.style.fontSize = '1.08rem';
+                    meta.style.color = '#111';
+                    meta.style.fontWeight = '700';
+                    meta.style.marginBottom = '10px';
+                    meta.style.fontFamily = 'Segoe UI, Arial, sans-serif';
+                    if (post.author) {
+                        const userSpan = document.createElement('span');
+                        userSpan.textContent = post.author;
+                        userSpan.style.fontWeight = '700';
+                        userSpan.style.fontSize = '1.13rem';
+                        userSpan.style.letterSpacing = '0.2px';
+                        userSpan.style.padding = '2px 10px';
+                        userSpan.style.borderRadius = '8px';
+                        userSpan.style.background = '#f5f5f5';
+                        userSpan.style.boxShadow = '0 1px 4px rgba(20,33,61,0.06)';
+                        meta.appendChild(userSpan);
+                    }
+                    if (post.date) {
+                        const d = new Date(post.date);
+                        const dateSpan = document.createElement('span');
+                        dateSpan.textContent = '• ' + d.toLocaleDateString();
+                        dateSpan.style.fontWeight = '400';
+                        dateSpan.style.fontSize = '0.98rem';
+                        dateSpan.style.color = '#888';
+                        meta.appendChild(dateSpan);
+                    }
+                    card.appendChild(meta);
+
+                    // Hashtag area SOPRA il post (senza #, bordo viola, sfondo bianco)
+                    if (post.hashtags && post.hashtags.length > 0) {
+                        const hashtagsArea = document.createElement('div');
+                        hashtagsArea.style.display = 'flex';
+                        hashtagsArea.style.flexWrap = 'wrap';
+                        hashtagsArea.style.gap = '8px';
+                        hashtagsArea.style.justifyContent = 'center';
+                        hashtagsArea.style.margin = '0 0 10px 0';
+                        post.hashtags.forEach(h => {
+                            const tag = document.createElement('span');
+                            tag.textContent = h;
+                            tag.style.background = '#fff';
+                            tag.style.color = '#4b2e83';
+                            tag.style.border = '2px solid #6c3fcf';
+                            tag.style.borderRadius = '50px';
+                            tag.style.padding = '4px 14px';
+                            tag.style.fontSize = '0.98rem';
+                            tag.style.fontWeight = '600';
+                            tag.style.letterSpacing = '0.5px';
+                            tag.style.backgroundClip = 'padding-box';
+                            tag.style.boxSizing = 'border-box';
+                            hashtagsArea.appendChild(tag);
+                        });
+                        card.appendChild(hashtagsArea);
+                    }
+
+                    // Immagine
+                    if (post.picture) {
+                        const img = document.createElement('img');
+                        img.src = post.picture;
+                        img.alt = 'Post image';
+                        img.style.width = '100%';
+                        img.style.maxWidth = '340px';
+                        img.style.maxHeight = '260px';
+                        img.style.objectFit = 'cover';
+                        img.style.borderRadius = '10px';
+                        img.style.marginBottom = '12px';
+                        card.appendChild(img);
+                    }
+                    // Descrizione (senza hashtag)
+                    if (post.text) {
+                        const desc = document.createElement('div');
+                        desc.textContent = post.text;
+                        desc.style.fontSize = '1.08rem';
+                        desc.style.marginBottom = '8px';
+                        desc.style.textAlign = 'center';
+                        card.appendChild(desc);
+                    }
+                    // Together with
+                    if (post.togetherwith && post.togetherwith.length > 0) {
+                        const tw = document.createElement('div');
+                        tw.textContent = 'Together with: ' + post.togetherwith.join(', ');
+                        tw.style.fontSize = '0.98rem';
+                        tw.style.color = '#c97c00';
+                        tw.style.marginBottom = '4px';
+                        card.appendChild(tw);
+                    }
+
+                    // Pulsante "Lascia un commento" piccolo e poco visibile
+                    const commentBtn = document.createElement('button');
+                    commentBtn.textContent = 'Lascia un commento';
+                    commentBtn.style.background = 'transparent';
+                    commentBtn.style.color = '#bbb';
+                    commentBtn.style.border = 'none';
+                    commentBtn.style.fontSize = '0.93rem';
+                    commentBtn.style.marginTop = '10px';
+                    commentBtn.style.cursor = 'pointer';
+                    commentBtn.style.opacity = '0.6';
+                    commentBtn.style.transition = 'opacity 0.2s';
+                    commentBtn.onmouseover = () => commentBtn.style.opacity = '1';
+                    commentBtn.onmouseout = () => commentBtn.style.opacity = '0.6';
+                    card.appendChild(commentBtn);
+
+                    feed.appendChild(card);
+                });
+            }
+        } catch (err) {
+            document.getElementById('feed').innerHTML = '<div style="color:#f00;text-align:center;">Error loading posts</div>';
+        }
+    }
+    loadPosts();
+    </script>
 </body>
 </html>

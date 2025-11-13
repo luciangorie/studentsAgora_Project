@@ -39,8 +39,6 @@
             from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
         }
-
-        /* Header section: image + main info */
         .profile-header {
             display: flex;
             flex-wrap: wrap;
@@ -90,8 +88,6 @@
             font-size: 0.95rem;
             color: var(--muted);
         }
-
-        /* Body section */
         .profile-body {
             padding: 24px 28px;
         }
@@ -129,7 +125,9 @@
             color: var(--muted);
             font-style: italic;
         }
-
+        .hidden {
+            display: none !important;
+        }
         @media (max-width: 600px) {
             .profile-header {
                 flex-direction: column;
@@ -151,27 +149,24 @@
                     <span id="name">-</span> <span id="surname">-</span>
                 </div>
                 <div class="university">
-                    <span id="university">-</span> 📍
+                    📍 <span id="university">-</span>
                 </div>
                 <div class="details-line">
-                    Birthday: <span id="birthday">-</span> 🎂
+                    🎂 <span id="birthday">-</span>
                 </div>
             </div>
         </div>
-
         <div class="profile-body">
             <div class="section">
                 <h2>Biography</h2>
                 <div class="biography" id="biography">No biography available.</div>
             </div>
-
-            <div class="section">
+            <div class="section" id="memberSection">
                 <h2>Member of</h2>
                 <ul class="list" id="memberofList">
                     <li class="empty">None</li>
                 </ul>
             </div>
-
             <div class="section">
                 <h2>Events Participated</h2>
                 <ul class="list" id="eventsList">
@@ -180,11 +175,9 @@
             </div>
         </div>
     </div>
-
     <script>
         const username = "sdc";
 
-        // Fetch main student info
         async function fetchStudentDetails() {
             try {
                 const response = await fetch(`/api/v1/students/getfrom/${username}`);
@@ -221,7 +214,10 @@
             }
         }
 
-        // Fetch extended personal details
+        function hideMemberSection() {
+            document.getElementById('memberSection').classList.add('hidden');
+        }
+
         async function fetchPersonalDetails() {
             try {
                 const response = await fetch(`/api/v1/students/details/${username}`);
@@ -239,7 +235,7 @@
                             memberList.appendChild(li);
                         });
                     } else {
-                        memberList.innerHTML = '<li class="empty">None</li>';
+                        hideMemberSection();
                     }
 
                     const eventsList = document.getElementById('eventsList');

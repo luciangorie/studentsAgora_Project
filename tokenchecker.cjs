@@ -36,7 +36,7 @@ function tokenChecker(accessType) {
 
 
 function TokenGen(email) {
-	var aut='Cliente';
+	var aut='Student';
     const payload = { email, aut };
     const options = { expiresIn: '1h' };
     const secret = process.env.SUPER_SECRET || 'niente'; 
