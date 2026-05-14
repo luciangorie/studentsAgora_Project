@@ -4,77 +4,30 @@
     <meta charset="UTF-8">
     <title>Students Agora - Home</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <style>
-        :root {
-            --main: #14213d;
-            --accent: #fca311;
-            --accent-dark: #c97c00;
-            --bg: #1a1f2b;
-            --purple: #6c3fcf;
-            --text: #e5e5e5;
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        navy: '#14213d',
+                        amber: '#fca311',
+                        'amber-dark': '#c97c00',
+                        'app-bg': '#1a1f2b',
+                        purple: '#6c3fcf',
+                    }
+                }
+            }
         }
-        body {
-            background: var(--bg);
-            color: var(--text);
-            font-family: 'Segoe UI', Arial, sans-serif;
-            margin: 0;
-            min-height: 100vh;
-        }
-        .top-bar {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            background: rgba(20,33,61,0.97);
-            padding: 0 18px;
-            height: 70px;
-            box-shadow: 0 2px 8px rgba(20,33,61,0.12);
-        }
-        .bar-btn {
-            border: none;
-            border-radius: 18px;
-            font-size: 1.1rem;
-            font-weight: 700;
-            padding: 10px 22px;
-            cursor: pointer;
-            transition: background 0.2s, color 0.2s;
-        }
-        .bar-btn.yellow {
-            background: linear-gradient(90deg, var(--accent) 60%, var(--accent-dark) 100%);
-            color: var(--main);
-        }
-        .bar-btn.purple {
-            background: linear-gradient(90deg, var(--purple) 60%, #4b2e83 100%);
-            color: #fff;
-            margin: 0 18px;
-        }
-        .bar-btn.plus {
-            background: #fff;
-            color: var(--main);
-            border-radius: 50%;
-            width: 48px;
-            height: 48px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 2rem;
-            box-shadow: 0 2px 8px rgba(252,163,17,0.12);
-        }
-        .feed {
-            margin: 0 auto;
-            max-width: 700px;
-            padding: 40px 18px 0 18px;
-            min-height: 400px;
-        }
-    </style>
+    </script>
 </head>
-<body>
-    <div class="top-bar">
-    <button class="bar-btn yellow" onclick="window.location.href='student_details.html'">Test Area</button>
-        <button class="bar-btn purple">Ambassadors and Council news</button>
-    <button class="bar-btn plus" title="Add" onclick="window.location.href='create_post.html'"><span>+</span></button>
+<body class="bg-[#1a1f2b] text-[#e5e5e5] min-h-screen font-sans">
+    <div class="flex items-center justify-between bg-[#14213d]/97 px-5 h-[70px] shadow-md">
+    <button class="border-none rounded-[18px] text-lg font-bold px-6 py-2 cursor-pointer bg-gradient-to-r from-[#fca311] to-[#c97c00] text-[#14213d] hover:opacity-90 transition-opacity" onclick="window.location.href='student_details.html'">Test Area</button>
+        <button class="border-none rounded-[18px] text-lg font-bold px-6 py-2 cursor-pointer bg-gradient-to-r from-[#6c3fcf] to-[#4b2e83] text-white mx-5 hover:opacity-90 transition-opacity">Ambassadors and Council news</button>
+    <button class="border-none rounded-full w-12 h-12 flex items-center justify-center text-3xl bg-white text-[#14213d] shadow-md cursor-pointer hover:scale-105 transition-transform" title="Add" onclick="window.location.href='create_post.html'"><span>+</span></button>
     </div>
-    <div class="feed" id="feed">
-        <!-- Feed area, posts will be loaded here -->
+    <div class="mx-auto max-w-2xl px-5 pt-10 min-h-[400px]" id="feed">
     </div>
     <script>
     async function loadPosts() {

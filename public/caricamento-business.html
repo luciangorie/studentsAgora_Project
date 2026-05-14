@@ -2,44 +2,12 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Accesso effettuato</title>
+    <script src="https://cdn.tailwindcss.com"><\/script>
     <style>
-        body {
-            background: linear-gradient(120deg, #1a237e 60%, #fbc02d 100%);
-            color: #fff;
-            font-family: 'Segoe UI', Arial, sans-serif;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            min-height: 100vh;
-        }
-        .progress-container {
-            width: 80%;
-            max-width: 400px;
-            background-color: #263159;
-            border-radius: 8px;
-            margin: 30px 0;
-            box-shadow: 0 2px 8px rgba(20,33,61,0.12);
-        }
-        .progress-bar {
-            height: 20px;
-            background: linear-gradient(90deg, #fbc02d 60%, #1a237e 100%);
-            border-radius: 8px;
-            width: 0%;
-            transition: width 3s linear;
-        }
-        h1 {
-            color: #fbc02d;
-            font-size: 2rem;
-            margin-bottom: 10px;
-            text-align: center;
-        }
-        p {
-            color: #fff;
-            font-size: 1.1rem;
-            text-align: center;
-        }
+        .progress-bar { transition: width 3s linear; }
     </style>
     <script>
         window.onload = function() {
@@ -56,11 +24,11 @@
         };
     </script>
 </head>
-<body>
-    <h1 id="welcome-message">Accesso effettuato come...</h1>
-    <div class="progress-container">
-        <div id="progress" class="progress-bar"></div>
+<body class="bg-gradient-to-br from-[#1a237e] to-[#fbc02d] text-white min-h-screen flex flex-col items-center justify-center font-sans">
+    <h1 id="welcome-message" class="text-[#fbc02d] text-4xl font-bold mb-3 text-center">Accesso effettuato come...</h1>
+    <div class="w-4/5 max-w-sm bg-[#263159] rounded-lg my-8 shadow-md overflow-hidden">
+        <div id="progress" class="progress-bar h-5 bg-gradient-to-r from-[#fbc02d] to-[#1a237e] w-0"></div>
     </div>
-    <p>Reindirizzamento in corso...</p>
+    <p class="text-white text-lg text-center">Reindirizzamento in corso...</p>
 </body>
 </html>
