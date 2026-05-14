@@ -64,6 +64,30 @@
             min-height: 70px;
             resize: vertical;
         }
+        .upload-area {
+            border: 2px dashed var(--accent-dark);
+            border-radius: 10px;
+            padding: 18px;
+            text-align: center;
+            cursor: pointer;
+            transition: border-color 0.2s;
+            background: #22263a;
+        }
+        .upload-area:hover { border-color: var(--accent); }
+        .upload-area input[type="file"] { display: none; }
+        #imagePreview {
+            display: none;
+            max-width: 100%;
+            max-height: 200px;
+            border-radius: 8px;
+            margin-top: 10px;
+            object-fit: cover;
+        }
+        #uploadStatus {
+            font-size: 0.9rem;
+            margin-top: 6px;
+            min-height: 18px;
+        }
         .optional-btn {
             background: var(--accent);
             color: var(--main);
@@ -95,14 +119,21 @@
             background: linear-gradient(90deg, var(--accent-dark) 60%, var(--accent) 100%);
         }
     </style>
+    <script src="https://cdn.jsdelivr.net/npm/face-api.js@0.22.2/dist/face-api.min.js"></script>
 </head>
 <body>
     <div class="container">
         <h1>Create a Post</h1>
         <form id="postForm">
             <div class="form-group">
-                <label for="picture">Photo Link</label>
-                <input type="text" id="picture" name="picture" placeholder="Paste image URL here">
+                <label>Foto</label>
+                <div class="upload-area" id="uploadArea" onclick="document.getElementById('imageFile').click()">
+                    <input type="file" id="imageFile" accept="image/jpeg,image/png,image/gif,image/webp">
+                    <span id="uploadLabel">Clicca per scegliere un'immagine</span>
+                    <img id="imagePreview" alt="Anteprima">
+                </div>
+                <div id="uploadStatus" style="color:#aaa;"></div>
+                <div id="faceInfo" style="font-size:0.92rem;color:#6c3fcf;font-weight:600;margin-top:4px;min-height:18px;"></div>
             </div>
             <div class="form-group">
                 <label for="text">Description</label>
@@ -138,9 +169,49 @@
             document.getElementById('togetherwith-group').style.display = 'block';
             this.style.display = 'none';
         });
+        let detectedFaceCount = null;
+
+        // Carica i modelli face-api.js in background appena la pagina è pronta
+        const modelsReady = faceapi.nets.ssdMobilenetv1.loadFromUri('/models')
+            .catch(() => null);
+
+        // Anteprima immagine + rilevamento facce
+        document.getElementById('imageFile').addEventListener('change', function() {
+            const file = this.files[0];
+            if (!file) return;
+            document.getElementById('uploadLabel').textContent = file.name;
+            document.getElementById('faceInfo').textContent = '';
+            detectedFaceCount = null;
+            const reader = new FileReader();
+            reader.onload = async (e) => {
+                const preview = document.getElementById('imagePreview');
+                preview.src = e.target.result;
+                preview.style.display = 'block';
+                document.getElementById('uploadStatus').textContent = '';
+
+                // Aspetta che i modelli siano pronti, poi rileva
+                document.getElementById('faceInfo').textContent = '🔍 Analisi facce...';
+                try {
+                    await modelsReady;
+                    const detections = await faceapi.detectAllFaces(
+                        preview,
+                        new faceapi.SsdMobilenetv1Options({ minConfidence: 0.4 })
+                    );
+                    detectedFaceCount = detections.length;
+                    document.getElementById('faceInfo').textContent =
+                        detectedFaceCount > 0
+                            ? `👤 Facce rilevate: ${detectedFaceCount} — Remember to tag ${detectedFaceCount} people!`
+                            : '👤 Nessuna faccia rilevata';
+                } catch {
+                    detectedFaceCount = null;
+                    document.getElementById('faceInfo').textContent = '';
+                }
+            };
+            reader.readAsDataURL(file);
+        });
+
         document.getElementById('postForm').addEventListener('submit', async function(e) {
             e.preventDefault();
-            const picture = document.getElementById('picture').value.trim();
             const text = document.getElementById('text').value.trim();
             const hashtags = document.getElementById('hashtags').value.trim();
             let togetherwith = [];
@@ -156,13 +227,44 @@
                     if (username) author = username;
                 }
             }
+
+            // Upload immagine se selezionata
+            let picture = '';
+            const fileInput = document.getElementById('imageFile');
+            if (fileInput.files.length > 0) {
+                const statusEl = document.getElementById('uploadStatus');
+                statusEl.style.color = '#fca311';
+                statusEl.textContent = 'Caricamento immagine...';
+                const formData = new FormData();
+                formData.append('image', fileInput.files[0]);
+                try {
+                    const uploadRes = await fetch('/api/v1/posts/upload', {
+                        method: 'POST',
+                        body: formData
+                    });
+                    const uploadResult = await uploadRes.json();
+                    if (!uploadResult.success) {
+                        statusEl.style.color = '#e74c3c';
+                        statusEl.textContent = 'Errore upload: ' + uploadResult.error;
+                        return;
+                    }
+                    picture = uploadResult.url;
+                    statusEl.style.color = '#27ae60';
+                    statusEl.textContent = 'Immagine caricata!';
+                } catch (err) {
+                    document.getElementById('uploadStatus').textContent = 'Errore upload: ' + err;
+                    return;
+                }
+            }
+
             const postData = {
                 picture,
                 text,
                 hashtags: hashtags ? hashtags.split(',').map(s => s.trim()).filter(Boolean) : [],
                 togetherwith,
                 date: new Date().toISOString(),
-                author
+                author,
+                faceCount: detectedFaceCount
             };
             try {
                 const response = await fetch('/api/v1/posts/create', {

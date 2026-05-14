@@ -98,6 +98,27 @@
                     card.style.maxWidth = '420px';
                     card.style.marginLeft = 'auto';
                     card.style.marginRight = 'auto';
+                    card.style.position = 'relative';
+
+                    // Badge facce in alto a destra
+                    if (post.faceCount !== undefined && post.faceCount !== null && post.faceCount > 0) {
+                        const badge = document.createElement('div');
+                        badge.style.position = 'absolute';
+                        badge.style.top = '10px';
+                        badge.style.right = '12px';
+                        badge.style.background = '#6c3fcf';
+                        badge.style.color = '#fff';
+                        badge.style.borderRadius = '20px';
+                        badge.style.padding = '4px 10px 4px 8px';
+                        badge.style.fontSize = '0.85rem';
+                        badge.style.fontWeight = '700';
+                        badge.style.display = 'flex';
+                        badge.style.alignItems = 'center';
+                        badge.style.gap = '4px';
+                        badge.style.boxShadow = '0 2px 6px rgba(108,63,207,0.35)';
+                        badge.innerHTML = '&#128100; ' + post.faceCount;
+                        card.appendChild(badge);
+                    }
 
                     // Username e data SOPRA il post
                     const meta = document.createElement('div');
@@ -163,13 +184,26 @@
                     if (post.picture) {
                         const img = document.createElement('img');
                         img.src = post.picture;
-                        img.alt = 'Post image';
+                        img.alt = '';
                         img.style.width = '100%';
-                        img.style.maxWidth = '340px';
-                        img.style.maxHeight = '260px';
-                        img.style.objectFit = 'cover';
+                        img.style.maxWidth = '380px';
+                        img.style.height = 'auto';
+                        img.style.objectFit = 'contain';
                         img.style.borderRadius = '10px';
                         img.style.marginBottom = '12px';
+                        img.onerror = () => {
+                            img.style.display = 'none';
+                            const errDiv = document.createElement('div');
+                            errDiv.textContent = '⚠️ Immagine non caricabile: ' + post.picture;
+                            errDiv.style.fontSize = '0.82rem';
+                            errDiv.style.color = '#c0392b';
+                            errDiv.style.background = '#ffeaea';
+                            errDiv.style.borderRadius = '6px';
+                            errDiv.style.padding = '6px 10px';
+                            errDiv.style.marginBottom = '10px';
+                            errDiv.style.wordBreak = 'break-all';
+                            card.insertBefore(errDiv, img.nextSibling);
+                        };
                         card.appendChild(img);
                     }
                     // Descrizione (senza hashtag)
@@ -180,6 +214,18 @@
                         desc.style.marginBottom = '8px';
                         desc.style.textAlign = 'center';
                         card.appendChild(desc);
+                    }
+                    // Many people label
+                    if (post.faceCount !== undefined && post.faceCount !== null && post.faceCount >= 4) {
+                        const faceDiv = document.createElement('div');
+                        faceDiv.textContent = 'Many people in this pic!';
+                        faceDiv.style.fontSize = '0.92rem';
+                        faceDiv.style.color = '#6c3fcf';
+                        faceDiv.style.fontWeight = '600';
+                        faceDiv.style.marginBottom = '6px';
+                        faceDiv.style.textAlign = 'center';
+                        faceDiv.style.letterSpacing = '0.4px';
+                        card.appendChild(faceDiv);
                     }
                     // Together with
                     if (post.togetherwith && post.togetherwith.length > 0) {

@@ -10,5 +10,6 @@ module.exports = mongoose.model('DBPost', new Schema({
     author: String,
     togetherwith: [String],
     hashtags: [String],
+    faceCount: { type: Number, default: null },
 }));
 
