@@ -17,6 +17,7 @@
             color: var(--text);
             font-family: 'Segoe UI', Arial, sans-serif;
             margin: 0;
+            padding: 24px 14px 40px;
             min-height: 100vh;
             display: flex;
             flex-direction: column;
@@ -27,9 +28,9 @@
             border-radius: 18px;
             box-shadow: 0 8px 32px rgba(20,33,61,0.25);
             border: 1.5px solid var(--accent);
-            padding: 32px 28px 24px 28px;
-            margin-top: 40px;
-            max-width: 400px;
+            padding: 30px 30px 24px;
+            margin-top: 22px;
+            max-width: 460px;
             width: 100%;
             display: flex;
             flex-direction: column;
@@ -37,17 +38,21 @@
         }
         h1 {
             color: var(--accent);
-            margin-bottom: 18px;
+            margin: 0 0 24px;
+            font-size: 1.75rem;
+            letter-spacing: 0.3px;
         }
+        #postForm { width: 100%; }
         .form-group {
-            margin-bottom: 18px;
+            margin-bottom: 16px;
             width: 100%;
         }
         label {
             display: block;
-            margin-bottom: 7px;
+            margin-bottom: 8px;
             font-weight: 600;
             color: var(--accent);
+            letter-spacing: 0.2px;
         }
         input[type="text"], textarea {
             width: 100%;
@@ -60,27 +65,52 @@
             box-sizing: border-box;
             margin-bottom: 6px;
         }
+        input[type="text"]:focus, textarea:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(252,163,17,0.18);
+        }
+        select {
+            width: 100%;
+            padding: 10px 14px;
+            border: 1.5px solid var(--accent-dark);
+            border-radius: 6px;
+            background: #22263a;
+            color: var(--text);
+            font-size: 1rem;
+            box-sizing: border-box;
+            margin-bottom: 6px;
+        }
+        select:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(252,163,17,0.18);
+        }
         textarea {
-            min-height: 70px;
+            min-height: 96px;
             resize: vertical;
+            line-height: 1.45;
         }
         .upload-area {
             border: 2px dashed var(--accent-dark);
             border-radius: 10px;
-            padding: 18px;
+            padding: 20px;
             text-align: center;
             cursor: pointer;
-            transition: border-color 0.2s;
+            transition: border-color 0.2s, background 0.2s;
             background: #22263a;
         }
-        .upload-area:hover { border-color: var(--accent); }
+        .upload-area:hover {
+            border-color: var(--accent);
+            background: #262b40;
+        }
         .upload-area input[type="file"] { display: none; }
         #imagePreview {
             display: none;
             max-width: 100%;
             max-height: 200px;
             border-radius: 8px;
-            margin-top: 10px;
+            margin-top: 12px;
             object-fit: cover;
         }
         #uploadStatus {
@@ -112,11 +142,95 @@
             font-weight: 700;
             padding: 12px 32px;
             cursor: pointer;
-            margin-top: 10px;
+            margin-top: 14px;
             width: 100%;
         }
         .submit-btn:hover {
             background: linear-gradient(90deg, var(--accent-dark) 60%, var(--accent) 100%);
+        }
+        .ai-hashtag-btn {
+            background: #555;
+            color: #999;
+            border: none;
+            border-radius: 6px;
+            padding: 7px 16px;
+            font-size: 0.92rem;
+            font-weight: 600;
+            cursor: not-allowed;
+            margin: 2px 0 16px;
+            transition: background 0.2s, color 0.2s;
+        }
+        .ai-hashtag-btn.active {
+            background: var(--accent);
+            color: var(--main);
+            cursor: pointer;
+        }
+        .ai-hashtag-btn.active:hover {
+            background: var(--accent-dark);
+        }
+        .hashtag-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+        .hashtag-checkbox {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 12px;
+            background: #22263a;
+            border: 1.5px solid var(--accent-dark);
+            border-radius: 6px;
+            cursor: pointer;
+            transition: border-color 0.2s, background 0.2s;
+        }
+        .hashtag-checkbox:hover {
+            border-color: var(--accent);
+            background: #262b40;
+        }
+        .hashtag-checkbox input[type="checkbox"] {
+            cursor: pointer;
+            accent-color: var(--accent);
+        }
+        .hashtag-checkbox label {
+            margin: 0;
+            font-weight: 500;
+            font-size: 0.95rem;
+            cursor: pointer;
+            color: var(--text);
+        }
+        .ai-suggestion {
+            font-size: 0.92rem;
+            color: #b8bfd4;
+            margin-top: 6px;
+            padding: 8px 12px;
+            background: rgba(252,163,17,0.1);
+            border-left: 3px solid var(--accent);
+            border-radius: 4px;
+        }
+        .ai-location-suggestion {
+            font-size: 0.92rem;
+            color: #b8bfd4;
+            margin-top: 6px;
+            padding: 8px 12px;
+            background: rgba(252,163,17,0.1);
+            border-left: 3px solid var(--accent);
+            border-radius: 4px;
+        }
+        .ai-location-btn {
+            margin-top: 8px;
+            background: var(--accent);
+            color: var(--main);
+            border: none;
+            border-radius: 6px;
+            padding: 6px 10px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+        .ai-location-btn:hover {
+            background: var(--accent-dark);
         }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/face-api.js@0.22.2/dist/face-api.min.js"></script>
@@ -139,19 +253,50 @@
                 <label for="text">Description</label>
                 <textarea id="text" name="text" required placeholder="Write something..."></textarea>
             </div>
+            <button type="button" class="ai-hashtag-btn" id="aiHashtagBtn" disabled>AI Help - Hashtags</button>
             <div class="form-group">
-                <label for="hashtags">Hashtags (comma separated)</label>
-                <input type="text" id="hashtags" name="hashtags" placeholder="#university, #event">
+                <label>Hashtags (select multiple)</label>
+                <div class="hashtag-grid" id="hashtagGrid">
+                </div>
+                <div id="aiHashtagSuggestion" class="ai-suggestion" style="display:none;"></div>
             </div>
-            <div class="form-group" id="togetherwith-group" style="display:none;">
-                <label for="togetherwith">Together with (comma separated usernames)</label>
-                <input type="text" id="togetherwith" name="togetherwith" placeholder="user1, user2">
+            <div class="form-group">
+                <label for="location">Location</label>
+                <select id="location" name="location" required>
+                    <option value="">Select a location</option>
+                </select>
+                <div id="aiLocationSuggestion" class="ai-location-suggestion" style="display:none;"></div>
+                <button type="button" class="ai-location-btn" id="useAiLocationBtn" style="display:none;">Use AI suggestion</button>
             </div>
-            <button type="button" class="optional-btn" id="addTogetherBtn">Add "Together with"</button>
+            <button type="button" class="optional-btn" id="addTogetherBtn">Add tags</button>
             <button type="submit" class="submit-btn">Post</button>
         </form>
+    </div>
     <script>
-        // Funzione per decodificare il JWT (senza validazione firma)
+        const CONFIG = {
+            hashtags: ['challenge', 'micro-module', 'european_union', 'innovation', 'cutting-edge_technologies', 'community', 'food', 'cultures', 'travel', 'sustainability', 'education', 'networking'],
+            locations: ['TUHH Hamburg', 'INSA Strasbourg', 'Placeholder 1', 'Placeholder 2', 'Placeholder 3', 'Placeholder 4', 'Placeholder 5', 'Placeholder 6', 'Placeholder 7', 'Placeholder 8', 'Placeholder 9', 'Placeholder 10']
+        };
+
+        const hashtagGrid = document.getElementById('hashtagGrid');
+        CONFIG.hashtags.forEach((tag, idx) => {
+            const div = document.createElement('div');
+            div.className = 'hashtag-checkbox';
+            div.innerHTML = `
+                <input type="checkbox" id="hashtag_${idx}" name="hashtags" value="${tag}">
+                <label for="hashtag_${idx}">${tag}</label>
+            `;
+            hashtagGrid.appendChild(div);
+        });
+
+        const locationSelect = document.getElementById('location');
+        CONFIG.locations.forEach(loc => {
+            const opt = document.createElement('option');
+            opt.value = loc;
+            opt.textContent = loc;
+            locationSelect.appendChild(opt);
+        });
+
         function parseJwt (token) {
             try {
                 return JSON.parse(atob(token.split('.')[1]));
@@ -165,17 +310,58 @@
             if (data.success) return data.id;
             return null;
         }
-        document.getElementById('addTogetherBtn').addEventListener('click', function() {
-            document.getElementById('togetherwith-group').style.display = 'block';
-            this.style.display = 'none';
+
+        document.getElementById('text').addEventListener('input', function() {
+            const btn = document.getElementById('aiHashtagBtn');
+            if (this.value.length > 50) {
+                btn.classList.add('active');
+                btn.disabled = false;
+            } else {
+                btn.classList.remove('active');
+                btn.disabled = true;
+            }
+        });
+
+        document.getElementById('aiHashtagBtn').addEventListener('click', function(e) {
+            e.preventDefault();
+            const suggestionDiv = document.getElementById('aiHashtagSuggestion');
+            const randomTags = CONFIG.hashtags.sort(() => Math.random() - 0.5).slice(0, 3);
+            suggestionDiv.innerHTML = 'AI Suggested (simulation): ' + randomTags.join(', ');
+            suggestionDiv.style.display = 'block';
+            
+            document.querySelectorAll('input[name="hashtags"]').forEach(cb => {
+                cb.checked = randomTags.includes(cb.value);
+            });
+            
+            const suggestedLoc = CONFIG.locations[Math.floor(Math.random() * CONFIG.locations.length)];
+            const locSuggestionDiv = document.getElementById('aiLocationSuggestion');
+            locSuggestionDiv.innerHTML = '💡 AI Suggested: ' + suggestedLoc;
+            locSuggestionDiv.style.display = 'block';
+            document.getElementById('location').value = suggestedLoc;
+            document.getElementById('useAiLocationBtn').style.display = 'none';
+        });
+
+        document.getElementById('location').addEventListener('change', function() {
+            if (this.value) {
+                const suggestionDiv = document.getElementById('aiLocationSuggestion');
+                const suggestedLoc = CONFIG.locations[Math.floor(Math.random() * CONFIG.locations.length)];
+                suggestionDiv.innerHTML = 'AI Suggested (simulation): ' + suggestedLoc;
+                suggestionDiv.style.display = 'block';
+                document.getElementById('useAiLocationBtn').style.display = 'block';
+                document.getElementById('useAiLocationBtn').onclick = () => {
+                    document.getElementById('location').value = suggestedLoc;
+                    suggestionDiv.style.display = 'none';
+                    document.getElementById('useAiLocationBtn').style.display = 'none';
+                };
+            }
+        });
+
+        document.getElementById('addTogetherBtn').addEventListener('click', function(e) {
+            e.preventDefault();
         });
         let detectedFaceCount = null;
-
-        // Carica i modelli face-api.js in background appena la pagina è pronta
         const modelsReady = faceapi.nets.ssdMobilenetv1.loadFromUri('/models')
             .catch(() => null);
-
-        // Anteprima immagine + rilevamento facce
         document.getElementById('imageFile').addEventListener('change', function() {
             const file = this.files[0];
             if (!file) return;
@@ -188,9 +374,7 @@
                 preview.src = e.target.result;
                 preview.style.display = 'block';
                 document.getElementById('uploadStatus').textContent = '';
-
-                // Aspetta che i modelli siano pronti, poi rileva
-                document.getElementById('faceInfo').textContent = '🔍 Analisi facce...';
+                document.getElementById('faceInfo').textContent = '🔍 Analisi volti';
                 try {
                     await modelsReady;
                     const detections = await faceapi.detectAllFaces(
@@ -200,8 +384,10 @@
                     detectedFaceCount = detections.length;
                     document.getElementById('faceInfo').textContent =
                         detectedFaceCount > 0
-                            ? `👤 Facce rilevate: ${detectedFaceCount} — Remember to tag ${detectedFaceCount} people!`
-                            : '👤 Nessuna faccia rilevata';
+                            ? (detectedFaceCount >= 3
+                                ? `👤 Faces detected: ${detectedFaceCount} — Remember to tag your friends!`
+                                : `👤 Faces detected: ${detectedFaceCount}`)
+                            : '👤 Nessun volto rilevato';
                 } catch {
                     detectedFaceCount = null;
                     document.getElementById('faceInfo').textContent = '';
@@ -213,10 +399,13 @@
         document.getElementById('postForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             const text = document.getElementById('text').value.trim();
-            const hashtags = document.getElementById('hashtags').value.trim();
-            let togetherwith = [];
-            if (document.getElementById('togetherwith-group').style.display !== 'none') {
-                togetherwith = document.getElementById('togetherwith').value.split(',').map(s => s.trim()).filter(Boolean);
+            const hashtagCheckboxes = document.querySelectorAll('input[name="hashtags"]:checked');
+            const hashtags = Array.from(hashtagCheckboxes).map(cb => cb.value);
+            const location = document.getElementById('location').value;
+            
+            if (!location) {
+                alert('Please select a location');
+                return;
             }
             let author = 'unknown';
             const token = localStorage.getItem('token');
@@ -228,7 +417,7 @@
                 }
             }
 
-            // Upload immagine se selezionata
+            
             let picture = '';
             const fileInput = document.getElementById('imageFile');
             if (fileInput.files.length > 0) {
@@ -260,8 +449,8 @@
             const postData = {
                 picture,
                 text,
-                hashtags: hashtags ? hashtags.split(',').map(s => s.trim()).filter(Boolean) : [],
-                togetherwith,
+                hashtags: hashtags,
+                location: location,
                 date: new Date().toISOString(),
                 author,
                 faceCount: detectedFaceCount

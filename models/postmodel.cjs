@@ -8,8 +8,8 @@ module.exports = mongoose.model('DBPost', new Schema({
     comments: [String],
     date: Date,
     author: String,
-    togetherwith: [String],
     hashtags: [String],
+    location: String,
     faceCount: { type: Number, default: null },
 }));
 

@@ -4,7 +4,7 @@ const fs = require('fs');
 const  bodyParser= require ('body-parser');
 const mongoose = require ('mongoose');
 const {hashPassword,comparePassword,compareDBAdmin,compareDBStudent}= require ("./passwordmanager.cjs");
-const {tokenChecker,TokenGen,TokenGenEnt,TokenGenVend,TokenGenAdmin,st}= require ("./tokenchecker.cjs");
+const {tokenChecker,TokenGen,TokenGenAdmin,st}= require ("./tokenchecker.cjs");
 const jwt = require('jsonwebtoken');
 require('dotenv').config({path: path.resolve(__dirname, 'process.env')});
 const {LocalStorage} = require('node-localstorage');
@@ -22,13 +22,13 @@ const port = process.env.PORT || 3000;
 const app = express();
 
 // Middleware per il parsing del body
-app.use(express.urlencoded({ extended: true })); // Per form HTML
+app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
-// Servi i file statici dalla cartella `public`
+
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Crea la cartella uploads se non esiste e servila come statica
+
 const uploadsDir = path.join(__dirname, 'uploads');
 if (!fs.existsSync(uploadsDir)) fs.mkdirSync(uploadsDir, { recursive: true });
 app.use('/uploads', express.static(uploadsDir));

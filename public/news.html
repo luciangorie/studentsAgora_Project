@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Ambassadors & Council News</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        :root {
+            --main: #14213d;
+            --accent: #fca311;
+            --accent-dark: #c97c00;
+            --bg: #1a1f2b;
+            --purple: #6c3fcf;
+            --text: #e5e5e5;
+        }
+        * { box-sizing: border-box; }
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'Segoe UI', Arial, sans-serif;
+            margin: 0;
+            min-height: 100vh;
+        }
+        .top-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: rgba(20,33,61,0.97);
+            padding: 0 18px;
+            height: 70px;
+            box-shadow: 0 2px 8px rgba(20,33,61,0.12);
+        }
+        .back-btn {
+            border: none;
+            border-radius: 18px;
+            font-size: 1rem;
+            font-weight: 700;
+            padding: 10px 22px;
+            cursor: pointer;
+            background: rgba(255,255,255,0.08);
+            color: var(--text);
+            transition: background 0.2s;
+        }
+        .back-btn:hover {
+            background: rgba(255,255,255,0.16);
+        }
+        .top-title {
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: var(--accent);
+            letter-spacing: 0.5px;
+        }
+        .spacer { width: 90px; }
+        .page-header {
+            text-align: center;
+            padding: 42px 18px 10px 18px;
+        }
+        .page-header h1 {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: var(--accent);
+            margin: 0 0 6px 0;
+            letter-spacing: 0.3px;
+        }
+        .page-header p {
+            color: #a0aab8;
+            font-size: 0.98rem;
+            margin: 0;
+        }
+        .divider {
+            width: 60px;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent), var(--purple));
+            border-radius: 4px;
+            margin: 14px auto 40px auto;
+        }
+        .news-feed {
+            max-width: 700px;
+            margin: 0 auto;
+            padding: 0 18px 60px 18px;
+        }
+        .news-card {
+            background: #fff;
+            color: #14213d;
+            border-radius: 16px;
+            box-shadow: 0 2px 16px rgba(20,33,61,0.13);
+            margin-bottom: 30px;
+            overflow: hidden;
+            transition: transform 0.15s, box-shadow 0.15s;
+        }
+        .news-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 24px rgba(20,33,61,0.18);
+        }
+        .news-card-header {
+            background: linear-gradient(90deg, var(--main) 70%, #1e2d50 100%);
+            padding: 16px 20px 12px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .news-badge {
+            display: inline-block;
+            padding: 4px 14px;
+            border-radius: 50px;
+            font-size: 0.78rem;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+        .badge-ambassador {
+            background: linear-gradient(90deg, var(--accent) 60%, var(--accent-dark) 100%);
+            color: var(--main);
+        }
+        .badge-council {
+            background: linear-gradient(90deg, var(--purple) 60%, #4b2e83 100%);
+            color: #fff;
+        }
+        .news-date {
+            font-size: 0.82rem;
+            color: #a0aab8;
+            font-style: italic;
+        }
+        .news-card-body {
+            padding: 20px 22px 22px 22px;
+        }
+        .news-card-body h2 {
+            font-size: 1.18rem;
+            font-weight: 800;
+            margin: 0 0 10px 0;
+            color: var(--main);
+        }
+        .news-card-body p {
+            font-size: 0.97rem;
+            color: #3a4560;
+            margin: 0 0 16px 0;
+            line-height: 1.6;
+        }
+        .news-card-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-top: 1px solid #f0f2f7;
+            padding-top: 12px;
+        }
+        .news-author {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.88rem;
+            color: #7a8299;
+            font-weight: 600;
+        }
+        .news-author .avatar {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--purple), var(--accent));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.85rem;
+            color: #fff;
+            font-weight: 700;
+        }
+        .read-more {
+            font-size: 0.88rem;
+            color: var(--purple);
+            font-weight: 700;
+            cursor: pointer;
+            border: none;
+            background: none;
+            padding: 0;
+            text-decoration: underline dotted;
+        }
+        .read-more:hover { color: var(--accent-dark); }
+        .publish-btn {
+            display: none;
+            border: none;
+            border-radius: 18px;
+            font-size: 1rem;
+            font-weight: 700;
+            padding: 10px 20px;
+            cursor: pointer;
+            background: linear-gradient(90deg, var(--accent) 60%, var(--accent-dark) 100%);
+            color: var(--main);
+            transition: background 0.2s, transform 0.15s;
+            white-space: nowrap;
+        }
+        .publish-btn:hover {
+            transform: scale(1.04);
+        }
+    </style>
+</head>
+<body>
+    <div class="top-bar">
+        <button class="back-btn" onclick="window.location.href='home.html'">&#8592; Back</button>
+        <span class="top-title">Ambassadors &amp; Council News</span>
+        <button id="publishBtn" class="publish-btn">Publish news +</button>
+    </div>
+
+    <div class="page-header">
+        <h1>Latest News</h1>
+        <p>Updates from Ambassadors and Student Council</p>
+    </div>
+    <div class="divider"></div>
+
+    <div class="news-feed">
+
+        <!-- News 1 -->
+        <div class="news-card">
+            <div class="news-card-header">
+                <span class="news-badge badge-ambassador">Ambassadors</span>
+                <span class="news-date">June 28, 2026</span>
+            </div>
+            <div class="news-card-body">
+                <h2>Welcome to Students Agora – Ambassador Program Launch</h2>
+                <p>
+                    We are thrilled to announce the official launch of the Students Agora Ambassador Program.
+                    Ambassadors will represent the community at university events, gather student feedback,
+                    and help shape the future of the platform. Applications are now open!
+                </p>
+                <div class="news-card-footer">
+                    <div class="news-author">
+                        <div class="avatar">A</div>
+                        <span>Agora Team</span>
+                    </div>
+                    <button class="read-more">Read more →</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- News 2 -->
+        <div class="news-card">
+            <div class="news-card-header">
+                <span class="news-badge badge-council">Council</span>
+                <span class="news-date">June 20, 2026</span>
+            </div>
+            <div class="news-card-body">
+                <h2>Student Council Meeting – June Recap</h2>
+                <p>
+                    The Student Council held its monthly meeting on June 18th. Key topics included
+                    the upcoming semester calendar, improvements to campus facilities, and the introduction
+                    of new student welfare initiatives. Minutes will be published on the portal shortly.
+                </p>
+                <div class="news-card-footer">
+                    <div class="news-author">
+                        <div class="avatar">C</div>
+                        <span>Student Council</span>
+                    </div>
+                    <button class="read-more">Read more →</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- News 3 -->
+        <div class="news-card">
+            <div class="news-card-header">
+                <span class="news-badge badge-ambassador">Ambassadors</span>
+                <span class="news-date">June 10, 2026</span>
+            </div>
+            <div class="news-card-body">
+                <h2>Campus Open Day – Ambassadors Needed!</h2>
+                <p>
+                    The annual Campus Open Day is scheduled for July 15th. We are looking for enthusiastic
+                    student ambassadors to welcome prospective students, lead campus tours, and represent
+                    the spirit of our university. Sign up through the platform before July 5th.
+                </p>
+                <div class="news-card-footer">
+                    <div class="news-author">
+                        <div class="avatar">E</div>
+                        <span>Events Office</span>
+                    </div>
+                    <button class="read-more">Read more →</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <script>
+        function parseJwt(token) {
+            try {
+                return JSON.parse(atob(token.split('.')[1]));
+            } catch (e) {
+                return null;
+            }
+        }
+        (function checkAdminAccess() {
+            const token = localStorage.getItem('token');
+            if (token) {
+                const decoded = parseJwt(token);
+                if (decoded && decoded.aut === 'Admin') {
+                    document.getElementById('publishBtn').style.display = 'block';
+                }
+            }
+        })();
+    </script>
+</body>
+</html>

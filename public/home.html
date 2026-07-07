@@ -69,8 +69,11 @@
 </head>
 <body>
     <div class="top-bar">
-    <button class="bar-btn yellow" onclick="window.location.href='student_details.html'">Test Area</button>
-        <button class="bar-btn purple">Ambassadors and Council news</button>
+    <button class="bar-btn yellow" onclick="window.location.href='student_details.html'" style="display:flex;flex-direction:column;align-items:center;line-height:1.1;">
+        <span>Account details</span>
+        <span style="font-size:0.65rem;font-weight:400;opacity:0.7;">(test)</span>
+    </button>
+        <button class="bar-btn purple" onclick="window.location.href='news.html'">Ambassadors and Council news</button>
     <button class="bar-btn plus" title="Add" onclick="window.location.href='create_post.html'"><span>+</span></button>
     </div>
     <div class="feed" id="feed">
@@ -84,7 +87,40 @@
             if (result.success && Array.isArray(result.data)) {
                 const feed = document.getElementById('feed');
                 feed.innerHTML = '';
-                result.data.forEach(post => {
+                
+        
+                const exploreSection = document.createElement('div');
+                exploreSection.style.background = '#fff';
+                exploreSection.style.color = '#14213d';
+                exploreSection.style.border = '2px solid #6c3fcf';
+                exploreSection.style.borderRadius = '14px';
+                exploreSection.style.boxShadow = '0 2px 12px rgba(108,63,207,0.15)';
+                exploreSection.style.marginBottom = '28px';
+                exploreSection.style.padding = '20px 18px';
+                exploreSection.style.maxWidth = '420px';
+                exploreSection.style.marginLeft = 'auto';
+                exploreSection.style.marginRight = 'auto';
+                exploreSection.style.textAlign = 'center';
+                exploreSection.style.cursor = 'default';
+                
+                const exploreTitle = document.createElement('h2');
+                exploreTitle.textContent = '🗺️ Explore ECIU University';
+                exploreTitle.style.margin = '0';
+                exploreTitle.style.fontSize = '1.3rem';
+                exploreTitle.style.fontWeight = '700';
+                exploreTitle.style.letterSpacing = '0.3px';
+                
+                exploreSection.appendChild(exploreTitle);
+                feed.appendChild(exploreSection);
+                
+                // Ordina i post 
+                const sortedData = result.data.sort((a, b) => {
+                    const scoreA = (a.faceCount || 0) * 0.7 + (a.hashtags?.length || 0) * 0.3;
+                    const scoreB = (b.faceCount || 0) * 0.7 + (b.hashtags?.length || 0) * 0.3;
+                    return scoreB - scoreA; 
+                });
+                
+                sortedData.forEach(post => {
                     const card = document.createElement('div');
                     card.style.background = '#fff';
                     card.style.color = '#14213d';
@@ -100,7 +136,7 @@
                     card.style.marginRight = 'auto';
                     card.style.position = 'relative';
 
-                    // Badge facce in alto a destra
+                    
                     if (post.faceCount !== undefined && post.faceCount !== null && post.faceCount > 0) {
                         const badge = document.createElement('div');
                         badge.style.position = 'absolute';
@@ -120,7 +156,6 @@
                         card.appendChild(badge);
                     }
 
-                    // Username e data SOPRA il post
                     const meta = document.createElement('div');
                     meta.style.display = 'flex';
                     meta.style.alignItems = 'center';
@@ -154,7 +189,7 @@
                     }
                     card.appendChild(meta);
 
-                    // Hashtag area SOPRA il post (senza #, bordo viola, sfondo bianco)
+                    // Hashtag area SOPRA il post
                     if (post.hashtags && post.hashtags.length > 0) {
                         const hashtagsArea = document.createElement('div');
                         hashtagsArea.style.display = 'flex';
@@ -180,7 +215,6 @@
                         card.appendChild(hashtagsArea);
                     }
 
-                    // Immagine
                     if (post.picture) {
                         const img = document.createElement('img');
                         img.src = post.picture;
@@ -206,7 +240,7 @@
                         };
                         card.appendChild(img);
                     }
-                    // Descrizione (senza hashtag)
+                   
                     if (post.text) {
                         const desc = document.createElement('div');
                         desc.textContent = post.text;
@@ -215,7 +249,6 @@
                         desc.style.textAlign = 'center';
                         card.appendChild(desc);
                     }
-                    // Many people label
                     if (post.faceCount !== undefined && post.faceCount !== null && post.faceCount >= 4) {
                         const faceDiv = document.createElement('div');
                         faceDiv.textContent = 'Many people in this pic!';
@@ -227,30 +260,15 @@
                         faceDiv.style.letterSpacing = '0.4px';
                         card.appendChild(faceDiv);
                     }
-                    // Together with
-                    if (post.togetherwith && post.togetherwith.length > 0) {
-                        const tw = document.createElement('div');
-                        tw.textContent = 'Together with: ' + post.togetherwith.join(', ');
-                        tw.style.fontSize = '0.98rem';
-                        tw.style.color = '#c97c00';
-                        tw.style.marginBottom = '4px';
-                        card.appendChild(tw);
+                    if (post.location) {
+                        const locDiv = document.createElement('div');
+                        locDiv.textContent = '📍 ' + post.location;
+                        locDiv.style.fontSize = '0.95rem';
+                        locDiv.style.color = '#666';
+                        locDiv.style.marginBottom = '4px';
+                        locDiv.style.textAlign = 'center';
+                        card.appendChild(locDiv);
                     }
-
-                    // Pulsante "Lascia un commento" piccolo e poco visibile
-                    const commentBtn = document.createElement('button');
-                    commentBtn.textContent = 'Lascia un commento';
-                    commentBtn.style.background = 'transparent';
-                    commentBtn.style.color = '#bbb';
-                    commentBtn.style.border = 'none';
-                    commentBtn.style.fontSize = '0.93rem';
-                    commentBtn.style.marginTop = '10px';
-                    commentBtn.style.cursor = 'pointer';
-                    commentBtn.style.opacity = '0.6';
-                    commentBtn.style.transition = 'opacity 0.2s';
-                    commentBtn.onmouseover = () => commentBtn.style.opacity = '1';
-                    commentBtn.onmouseout = () => commentBtn.style.opacity = '0.6';
-                    card.appendChild(commentBtn);
 
                     feed.appendChild(card);
                 });
