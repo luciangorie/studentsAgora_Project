@@ -115,8 +115,34 @@
                 
                 // Ordina i post 
                 const sortedData = result.data.sort((a, b) => {
-                    const scoreA = (a.faceCount || 0) * 0.7 + (a.hashtags?.length || 0) * 0.3;
-                    const scoreB = (b.faceCount || 0) * 0.7 + (b.hashtags?.length || 0) * 0.3;
+                    const now = new Date();
+                    const dateA = new Date(a.date);
+                    const dateB = new Date(b.date);
+                    const diffA = now - dateA;
+                    const diffB = now - dateB;
+                    const monthsA = diffA / (1000 * 60 * 60 * 24 * 30);
+                    const monthsB = diffB / (1000 * 60 * 60 * 24 * 30);
+                    let kq = 0;
+                    let kqB = 0;
+                    
+                    if (monthsA <= 6) {
+                        kq = 1;
+                    } else if (monthsA <= 12) {
+                        kq = 0.5;
+                    } else {
+                        kq = 0;
+                    }
+                    
+                    if (monthsB <= 6) {
+                        kqB = 1;
+                    } else if (monthsB <= 12) {
+                        kqB = 0.5;
+                    } else {
+                        kqB = 0;
+                    }
+                    
+                    const scoreA = (a.faceCount || 0) * 0.7 + (a.hashtags?.length || 0) * 0.2 + kq * 0.1;
+                    const scoreB = (b.faceCount || 0) * 0.7 + (b.hashtags?.length || 0) * 0.2 + kqB * 0.1;
                     return scoreB - scoreA; 
                 });
                 
