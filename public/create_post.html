@@ -387,7 +387,7 @@
                             ? (detectedFaceCount >= 3
                                 ? `👤 Faces detected: ${detectedFaceCount} — Remember to tag your friends!`
                                 : `👤 Faces detected: ${detectedFaceCount}`)
-                            : '👤 Nessun volto rilevato';
+                            : '👤 No faces detected.';
                 } catch {
                     detectedFaceCount = null;
                     document.getElementById('faceInfo').textContent = '';
@@ -423,7 +423,7 @@
             if (fileInput.files.length > 0) {
                 const statusEl = document.getElementById('uploadStatus');
                 statusEl.style.color = '#fca311';
-                statusEl.textContent = 'Caricamento immagine...';
+                statusEl.textContent = 'Loading...';
                 const formData = new FormData();
                 formData.append('image', fileInput.files[0]);
                 try {
@@ -434,14 +434,14 @@
                     const uploadResult = await uploadRes.json();
                     if (!uploadResult.success) {
                         statusEl.style.color = '#e74c3c';
-                        statusEl.textContent = 'Errore upload: ' + uploadResult.error;
+                        statusEl.textContent = 'Upload error: ' + uploadResult.error;
                         return;
                     }
                     picture = uploadResult.url;
                     statusEl.style.color = '#27ae60';
-                    statusEl.textContent = 'Immagine caricata!';
+                    statusEl.textContent = 'Image uploaded!';
                 } catch (err) {
-                    document.getElementById('uploadStatus').textContent = 'Errore upload: ' + err;
+                    document.getElementById('uploadStatus').textContent = 'Upload error: ' + err;
                     return;
                 }
             }
